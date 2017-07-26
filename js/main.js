@@ -108,9 +108,9 @@ class Tictactoe {
     let divs = board.getElementsByClassName('square');
     Array.from(divs).forEach(function(div) {
       div.addEventListener('click', function test(e) {
-        let attr = e.srcElement.getAttribute('cord');
+        let attr = e.target.getAttribute('cord');
         let tempBoard = game.updateBoard.bind(game);
-        tempBoard(attr, e.srcElement);
+        tempBoard(attr, e.target);
         this.removeEventListener('click', test);
         let change = game.changePlayer.bind(game);
         let winner = game.isWinner.bind(game);
