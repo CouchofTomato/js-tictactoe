@@ -1,46 +1,22 @@
-const board = document.getElementById('board');
 let game;
-
-const gameOver = (gameState, token) => {
-  const message = (gameState === "winner") ? `${token} is the winner` : `It's a draw`;
-
-  setTimeout(() => {
-    confirm(`${message}. Play another game?`) && newGame();
-  }, 100);
-};
-
-class Board {
-
-  constructor() {
-    this.board = [
-      [, , , ],
-      [, , , ],
-      [, , , ]
-    ];
-  }
-
-  placePiece(cord1, cord2, token) {
-    this.board[cord1][cord2] = token;
-  }
-
-  convertBoard(winners) {
-    const theBoard = this.board;
-    return winners.map(cords => cords.map(cord => theBoard[cord[0]][cord[1]]));
-  }
-
-  isFull() {
-    const a = [...this.board];
-    return [...a[0], ...a[1], ...a[2]].every(c => c !== undefined);
-  }
-}
+const board = document.getElementById('board'),
+      WIN_STATES = [
+            [ [0, 0], [0, 1], [0, 2] ],
+            [ [1, 0], [1, 1], [1, 2] ],
+            [ [2, 0], [2, 1], [2, 2] ],
+            [ [0, 0], [1, 0], [2, 0] ],
+            [ [0, 1], [1, 1], [2, 1] ],
+            [ [0, 2], [1, 2], [2, 2] ],
+            [ [0, 0], [1, 1], [2, 2] ],
+            [ [0, 2], [1, 1], [2, 0] ]
+          ];
 
 class Tictactoe {
 
-  constructor(thePlayer1, thePlayer2, theBoard) {
-    this.player1 = thePlayer1;
-    this.currentPlayer = this.player1;
-    this.player2 = thePlayer2;
-    this.gameBoard = theBoard;
+  constructor(str1, str2, obj) {
+    this.currentPlayer = str1;
+    this.nextPlayer = str2;
+    this.gameBoard = obj;
   }
 
   drawBoard() {
@@ -74,9 +50,9 @@ class Tictactoe {
         this.removeEventListener('click', test);
         
         if (winner()) {
-          gameOver('winner', theToken);
+          gameOver(theToken);
         } else if (draw()) {
-          gameOver('draw', theToken);
+          gameOver();
         }
         change();
       });
@@ -90,20 +66,10 @@ class Tictactoe {
   }
 
   isWinner() {
-    const theToken = this.currentPlayer,
-          winningPositions = [
-            [ [0, 0], [0, 1], [0, 2] ],
-            [ [1, 0], [1, 1], [1, 2] ],
-            [ [2, 0], [2, 1], [2, 2] ],
-            [ [0, 0], [1, 0], [2, 0] ],
-            [ [0, 1], [1, 1], [2, 1] ],
-            [ [0, 2], [1, 2], [2, 2] ],
-            [ [0, 0], [1, 1], [2, 2] ],
-            [ [0, 2], [1, 1], [2, 0] ]
-          ];
+    const theToken = this.currentPlayer;
     let result = false;
     
-    this.gameBoard.convertBoard(winningPositions).forEach(element => {
+    this.gameBoard.convertBoard(WIN_STATES).forEach(element => {
       if (element.every(nestedelement => nestedelement === theToken)) result = true;
     });
     return result;
@@ -114,10 +80,43 @@ class Tictactoe {
   }
 
   changePlayer() {
-    this.currentPlayer = (this.currentPlayer === this.player1) ? this.player2 : this.player1;
+    [this.currentPlayer, this.nextPlayer] = [this.nextPlayer, this.currentPlayer];
   }
 
 }
+
+class Board {
+
+  constructor() {
+    this.board = [
+      [, , , ],
+      [, , , ],
+      [, , , ]
+    ];
+  }
+
+  placePiece(cord1, cord2, token) {
+    this.board[cord1][cord2] = token;
+  }
+
+  convertBoard(winners) {
+    const theBoard = this.board;
+    return winners.map(cords => cords.map(cord => theBoard[cord[0]][cord[1]]));
+  }
+
+  isFull() {
+    const a = [...this.board];
+    return [...a[0], ...a[1], ...a[2]].every(c => c !== undefined);
+  }
+}
+
+const gameOver = function () {
+  const message = (arguments[0]) ? `${arguments[0]} is the winner` : `It's a draw`;
+
+  setTimeout(() => {
+    confirm(`${message}. Play another game?`) && newGame();
+  }, 100);
+};
 
 const newGame = () => {
   board.innerHTML = '';
