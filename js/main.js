@@ -50,9 +50,9 @@ class Tictactoe {
         this.removeEventListener('click', test);
         
         if (winner()) {
-          gameOver('winner', theToken);
+          gameOver(theToken);
         } else if (draw()) {
-          gameOver('draw', theToken);
+          gameOver();
         }
         change();
       });
@@ -110,8 +110,8 @@ class Board {
   }
 }
 
-const gameOver = (gameState, token) => {
-  const message = (gameState === "winner") ? `${token} is the winner` : `It's a draw`;
+const gameOver = function () {
+  const message = (arguments[0]) ? `${arguments[0]} is the winner` : `It's a draw`;
 
   setTimeout(() => {
     confirm(`${message}. Play another game?`) && newGame();
