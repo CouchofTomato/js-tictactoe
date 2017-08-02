@@ -21,17 +21,10 @@ class Tictactoe {
 
   drawBoard() {
     const divEl = document.createElement('div');
-    divEl.classList.add('row');
     
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        let square = document.createElement('div');
-        square.classList.add('col-1', 'square');
-        square.setAttribute('cord', `${i}${j}`);
-        divEl.appendChild(square);
-      }
-      board.appendChild(divEl);
-    }
+    divEl.classList.add('row');
+    divEl.innerHTML = addSquares();
+    board.appendChild(divEl);
   }
 
   addDivListeners() {
@@ -109,6 +102,15 @@ class Board {
     return [...a[0], ...a[1], ...a[2]].every(c => c !== undefined);
   }
 }
+
+const addSquares = () => new Array(9).fill(`<div class="col-1 square"`)
+  .map((c, i) => c = `${c} ${cords(i)}`)
+  .join("\n");
+
+const cords = (n) => {
+  const cord = n.toString(3);
+  return `cord="${(cord.length === 1) ? `0${cord}` : `${cord}`}"></div>`;
+};
 
 const gameOver = function (winner = false) {
   const message = (winner) ? `${winner} is the winner` : `It's a draw`;
