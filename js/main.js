@@ -110,8 +110,8 @@ class Board {
   }
 }
 
-const gameOver = function () {
-  const message = (arguments[0]) ? `${arguments[0]} is the winner` : `It's a draw`;
+const gameOver = function (winner = false) {
+  const message = (winner) ? `${winner} is the winner` : `It's a draw`;
 
   setTimeout(() => {
     confirm(`${message}. Play another game?`) && newGame();
